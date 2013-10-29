@@ -1,0 +1,38 @@
+{
+  "name": "crud-subservice",
+  "version": "0.0.0",
+  "description": "Nest crud-services within crud-services",
+  "main": "subservice.js",
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/istanbul test ./node_modules/.bin/_mocha -- -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bengourley/crud-subservice.git"
+  },
+  "keywords": [
+    "crud",
+    "service"
+  ],
+  "author": "Ben Gourley",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/bengourley/crud-subservice/issues"
+  },
+  "devDependencies": {
+    "service-locator": "0.0.2",
+    "hat": "0.0.3",
+    "validity": "0.0.3",
+    "crud-service": "0.0.5",
+    "mocha": "~1.13.0",
+    "istanbul": "~0.1.44",
+    "schemata": "0.0.7",
+    "save": "0.0.19"
+  }
+}
