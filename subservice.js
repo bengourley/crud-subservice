@@ -51,7 +51,7 @@ Subservice.prototype.create = function (entityId, obj, cb) {
 }
 
 /*
- * Get the address with the given id for the given service entity
+ * Get the item with the given id for the given service entity
  */
 Subservice.prototype.read = function (entityId, objId, cb) {
 
@@ -64,9 +64,9 @@ Subservice.prototype.read = function (entityId, objId, cb) {
 }
 
 /*
- * Remove address with the given id for the given service entity
+ * Remove item with the given id for the given service entity
  */
-Subservice.prototype.delete = function (entityId, addressId, cb) {
+Subservice.prototype.delete = function (entityId, objId, cb) {
 
   this.service.read(entityId, function (err, entity) {
 
@@ -74,10 +74,14 @@ Subservice.prototype.delete = function (entityId, addressId, cb) {
     if (!entity) return cb(new Error('No entity found with id ' + entityId))
 
     // Keep track of what was removed so it can be used in the callback
-    var deleted = entity[this.name][addressId]
-    delete entity[this.name][addressId]
+    var deleted = entity[this.name][objId]
 
-    // Update the service entity with the removed addresses
+    // The address with this id doesn't exist
+    if (!deleted) return cb(new Error('No entity found with id ' + objId))
+
+    delete entity[this.name][objId]
+
+    // Update the service entity with the removed item
     this.service.update(entity, {}, function (err) {
       if (err) return cb(err)
       cb(null, deleted)

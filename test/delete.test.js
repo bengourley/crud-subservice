@@ -68,13 +68,13 @@ function test(service) {
 
     })
 
-    it('should not error if an address does not exist for the given id', function (done) {
+    it('should error if an address does not exist for the given id', function (done) {
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
       service.create({}, function (err, savedObject) {
         if (err) return done(err)
-        addressService.delete(savedObject._id, uid(), function (err, obj) {
-          assert(!err)
-          assert(!obj)
+        addressService.delete(savedObject._id, uid(), function (err) {
+          assert(err)
+          assert(err instanceof Error)
           done()
         })
       })
