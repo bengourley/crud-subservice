@@ -15,7 +15,7 @@ nested item within your service entities that you want to store within the same 
 
 ## Usage
 
-```
+```js
 var CrudService = require('crud-service')
   , Subservice = require('crud-subservice')
   , save = require('save')
