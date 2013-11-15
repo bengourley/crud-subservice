@@ -25,9 +25,11 @@
   "bugs": {
     "url": "https://github.com/bengourley/crud-subservice/issues"
   },
+  "dependencies": {
+    "hat": "0.0.3"
+  },
   "devDependencies": {
     "service-locator": "0.0.2",
-    "hat": "0.0.3",
     "validity": "0.0.3",
     "crud-service": "0.0.5",
     "mocha": "~1.13.0",

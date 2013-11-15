@@ -2,7 +2,6 @@ module.exports = createSchema
 
 var schemata = require('schemata')
   , validity = require('validity')
-  , uid = require('hat')
 
 function createSchema() {
 
@@ -11,7 +10,6 @@ function createSchema() {
     // *NOT* a Mongo id, but named with underscore for familiarity
     { _id:
       { type: String
-      , defaultValue: function () { return uid() }
       }
 
     , fullName:

@@ -1,5 +1,7 @@
 module.exports = Subservice
 
+var uid = require('hat')
+
 function Subservice(name, service, schema, options) {
 
   this.name = name
@@ -38,15 +40,27 @@ Subservice.prototype.create = function (entityId, obj, cb) {
 
       // Otherwise carry on and add the obj
 
-      var index = getIndex.call(this, obj[this.options.idProperty], entity[this.name])
+      if (obj[this.options.idProperty]) {
 
-      if (typeof index === 'undefined') {
-        // Create
-        entity[this.name].push(obj)
+        // Incoming obj has an id
+        var index = getIndex.call(this, obj[this.options.idProperty], entity[this.name])
+        if (typeof index === 'undefined') {
+          // Create
+          entity[this.name].push(obj)
+        } else {
+          // Update
+          entity[this.name][index] = obj
+        }
+
       } else {
-        // Update
-        entity[this.name][index] = obj
+
+        // Incoming obj doesn't have an id
+        var id = uid()
+        obj[this.options.idProperty] = id
+        entity[this.name].push(obj)
+
       }
+
 
       // Update the service entity with the new obj
       this.service.update(entity, {}, function (err, updated) {
