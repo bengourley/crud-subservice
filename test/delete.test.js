@@ -39,28 +39,32 @@ function test(service) {
     it('should delete the correct item from a list of existing addresses', function (done) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
-        , existing = { deliveryAddresses: {} }
+        , existing = { deliveryAddresses: [] }
 
       // Create some existing addresses
-      for (var i = 0; i < 3; i++) existing.deliveryAddresses[uid()] = require('./fixtures/valid-new')()
+      for (var i = 0; i < 3; i++) {
+        var o = require('./fixtures/valid-new')()
+        o._id = uid()
+        existing.deliveryAddresses.push(o)
+      }
 
-      var key = Object.keys(existing.deliveryAddresses)[1]
+      var key = existing.deliveryAddresses[1]._id
 
       // Update a property to be sure that the correct address is deleted
-      existing.deliveryAddresses[key].fullName = 'Mrs. G Unit'
+      existing.deliveryAddresses[1].fullName = 'Mrs. G Unit'
 
       // Save the entity with the existing addresses
       service.create(existing, function (err, savedObject) {
         if (err) return done(err)
 
-        assert.equal(Object.keys(savedObject.deliveryAddresses).length, 3)
+        assert.equal(savedObject.deliveryAddresses.length, 3)
         addressService.delete(savedObject._id, key, function (err, obj) {
           if (err) return done(err)
           // Make sure that the object removed is the one we wanted
           assert.equal(obj.fullName, 'Mrs. G Unit')
           // Ensure it actually got removed from the object
           service.read(savedObject._id, function (err, obj) {
-            assert.equal(Object.keys(obj.deliveryAddresses).length, 2)
+            assert.equal(obj.deliveryAddresses.length, 2)
             done()
           })
         })

@@ -37,12 +37,22 @@ Subservice.prototype.create = function (entityId, obj, cb) {
       }
 
       // Otherwise carry on and add the obj
-      entity[this.name][obj[this.options.idProperty]] = obj
 
-      // Update the service entity with the new objes
+      var index = getIndex.call(this, obj[this.options.idProperty], entity[this.name])
+
+      if (typeof index === 'undefined') {
+        // Create
+        entity[this.name].push(obj)
+      } else {
+        // Update
+        entity[this.name][index] = obj
+      }
+
+      // Update the service entity with the new obj
       this.service.update(entity, {}, function (err, updated) {
         if (err) return cb(err)
-        cb(null, updated[this.name][obj[this.options.idProperty]])
+        var saved = extractFromArray.call(this, obj[this.options.idProperty], updated[this.name])
+        cb(null, saved)
       }.bind(this))
 
     }.bind(this))
@@ -58,7 +68,7 @@ Subservice.prototype.read = function (entityId, objId, cb) {
   this.service.read(entityId, function (err, entity) {
     if (err) return cb(err)
     if (!entity) return cb(new Error('No entity found with id ' + entityId))
-    cb(null, entity[this.name][objId])
+    cb(null, extractFromArray.call(this, objId, entity[this.name]))
   }.bind(this))
 
 }
@@ -73,13 +83,15 @@ Subservice.prototype.delete = function (entityId, objId, cb) {
     if (err) return cb(err)
     if (!entity) return cb(new Error('No entity found with id ' + entityId))
 
-    // Keep track of what was removed so it can be used in the callback
-    var deleted = entity[this.name][objId]
+    var deleteIndex = getIndex.call(this, objId, entity[this.name])
 
     // The address with this id doesn't exist
-    if (!deleted) return cb(new Error('No entity found with id ' + objId))
+    if (typeof deleteIndex === 'undefined') return cb(new Error('No entity found with id ' + objId))
 
-    delete entity[this.name][objId]
+    // Keep track of what was removed so it can be used in the callback
+    var deleted = entity[this.name][deleteIndex]
+
+    entity[this.name].splice(deleteIndex, 1)
 
     // Update the service entity with the removed item
     this.service.update(entity, {}, function (err) {
@@ -97,3 +109,15 @@ Subservice.prototype.delete = function (entityId, objId, cb) {
 // and updates if the object already exists. They have seperate tests incase the
 // functionality needs to diverge in the future.
 Subservice.prototype.update = Subservice.prototype.create
+
+function extractFromArray(id, array) {
+  return array.filter(function (o) {
+    return o[this.options.idProperty] === id
+  }.bind(this))[0]
+}
+
+function getIndex(id, array) {
+  for (var i = 0; i < array.length; i++) {
+    if (array[i][this.options.idProperty] === id) return i
+  }
+}

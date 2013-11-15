@@ -43,9 +43,9 @@ function test(service) {
     it('should add to a list of existing addresses', function (done) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
-        , existing = { deliveryAddresses: {} }
+        , existing = { deliveryAddresses: [] }
 
-      for (var i = 0; i < 3; i++) existing.deliveryAddresses[uid()] = require('./fixtures/valid-new')()
+      for (var i = 0; i < 3; i++) existing.deliveryAddresses.push(require('./fixtures/valid-new')())
 
       service.create(existing, function (err, savedObject) {
         if (err) return done(err)
@@ -54,7 +54,7 @@ function test(service) {
           assert(savedAddress)
           service.read(savedObject._id, function (err, obj) {
             if (err) return done(err)
-            assert.equal(Object.keys(obj.deliveryAddresses).length, 4)
+            assert.equal(obj.deliveryAddresses.length, 4)
             done()
           })
         })
@@ -65,19 +65,22 @@ function test(service) {
     it('should replace an existing address with a matching id', function (done) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
-        , existing = { deliveryAddresses: {} }
+        , existing = { deliveryAddresses: [] }
 
       // Create some existing addresses
-      for (var i = 0; i < 3; i++) existing.deliveryAddresses[uid()] = require('./fixtures/valid-new')()
+      for (var i = 0; i < 3; i++) {
+        var o = require('./fixtures/valid-new')()
+        o._id = uid()
+        existing.deliveryAddresses.push(o)
+      }
 
       // Save the entity with the existing addresses
       service.create(existing, function (err, savedObject) {
         if (err) return done(err)
         var address = require('./fixtures/valid-new')()
-          , key = Object.keys(savedObject.deliveryAddresses)[2]
 
         // Give the address to save one of the existing id/keys
-        address._id = key
+        address._id = savedObject.deliveryAddresses[2]._id
         // Update a property to be sure that the existing address is replaced
         address.fullName = 'Mrs. G Unit'
 
@@ -87,9 +90,9 @@ function test(service) {
           service.read(savedObject._id, function (err, obj) {
             if (err) return done(err)
             // Make sure that the number of addresses did not change
-            assert.equal(Object.keys(obj.deliveryAddresses).length, 3)
+            assert.equal(obj.deliveryAddresses.length, 3)
             // Make sure the changed property was updated
-            assert.equal(obj.deliveryAddresses[key].fullName, address.fullName)
+            assert.equal(obj.deliveryAddresses[2].fullName, address.fullName)
             done()
           })
         })
