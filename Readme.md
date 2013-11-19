@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/bengourley/validity-number-in-range.png?branch=master)](https://travis-ci.org/bengourley/validity-number-in-range)
 
+[![NPM](https://nodei.co/npm/crud-subservice.png)](https://nodei.co/npm/crud-subservice/)
+
 Nest crud-services within [crud-services](http://npm.im/crud-service). Useful if you have any sort of rich
 nested item within your service entities that you want to store within the same object, eg:
 
