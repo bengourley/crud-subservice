@@ -5,5 +5,6 @@ module.exports = function () {
     , region: 'Herts'
     , country: 'UK'
     , postalCode: 'WD24 8RQ'
+    , phoneNumbers: []
     })
 }

@@ -18,7 +18,7 @@ function test(service) {
 
       // Create some existing addresses
       for (var i = 0; i < 3; i++) {
-        var o = require('./fixtures/valid-new')()
+        var o = require('./fixtures/address-valid-new')()
         o._id = uid()
         existing.deliveryAddresses.push(o)
       }
@@ -26,7 +26,7 @@ function test(service) {
       // Save the entity with the existing addresses
       service.create(existing, function (err, savedObject) {
         if (err) return done(err)
-        var address = require('./fixtures/valid-new')()
+        var address = require('./fixtures/address-valid-new')()
           , key = savedObject.deliveryAddresses[2]._id
 
         // Give the address to save one of the existing id/keys
@@ -57,14 +57,14 @@ function test(service) {
 
       // Create some existing addresses
       for (var i = 0; i < 3; i++) {
-        var o = require('./fixtures/valid-new')()
+        var o = require('./fixtures/address-valid-new')()
         o._id = uid()
         existing.deliveryAddresses.push(o)
       }
 
       service.create(existing, function (err, savedObject) {
         if (err) return done(err)
-        addressService.update(savedObject._id, require('./fixtures/valid-new')(), function (err, savedAddress) {
+        addressService.update(savedObject._id, require('./fixtures/address-valid-new')(), function (err, savedAddress) {
           if (err) return done(err)
           assert(savedAddress)
           service.read(savedObject._id, function (err, obj) {
@@ -80,7 +80,7 @@ function test(service) {
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
       service.create({}, function (err, savedObject) {
         if (err) return done(err)
-        addressService.create(savedObject._id, require('./fixtures/valid-new')(), function (err, savedAddress) {
+        addressService.create(savedObject._id, require('./fixtures/address-valid-new')(), function (err, savedAddress) {
           if (err) return done(err)
           var update = require('./fixtures/invalid-missing')()
           // Grab the id of the saved valid item with which to update

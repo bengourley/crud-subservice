@@ -16,7 +16,7 @@ function test(service) {
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
       service.create({}, function (err, savedObject) {
         if (err) return done(err)
-        addressService.create(savedObject._id, require('./fixtures/valid-new')(), function (err, savedAddress) {
+        addressService.create(savedObject._id, require('./fixtures/address-valid-new')(), function (err, savedAddress) {
           if (err) return done(err)
           assert(savedAddress)
           service.read(savedObject._id, function (err, savedObject) {
@@ -43,7 +43,7 @@ function test(service) {
 
       // Create some existing addresses
       for (var i = 0; i < 3; i++) {
-        var o = require('./fixtures/valid-new')()
+        var o = require('./fixtures/address-valid-new')()
         o._id = uid()
         existing.deliveryAddresses.push(o)
       }

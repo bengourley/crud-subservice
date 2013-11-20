@@ -15,7 +15,7 @@ function test(service) {
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
       service.create({}, function (err, savedObject) {
         if (err) return done(err)
-        addressService.create(savedObject._id, require('./fixtures/valid-new')(), function (err, savedAddress) {
+        addressService.create(savedObject._id, require('./fixtures/address-valid-new')(), function (err, savedAddress) {
           if (err) return done(err)
           assert(savedAddress)
           addressService.read(savedObject._id, savedAddress._id, function (err, obj) {

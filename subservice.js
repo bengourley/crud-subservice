@@ -16,7 +16,9 @@ function Subservice(name, service, schema, options) {
 /*
  * Create a single subservice entity
  */
-Subservice.prototype.create = function (entityId, obj, cb) {
+Subservice.prototype.create = function (entityId, obj, options, cb) {
+
+  if (typeof options === 'function') cb = options
 
   if (!Array.isArray(entityId)) entityId = [ entityId ]
 
@@ -63,12 +65,14 @@ Subservice.prototype.create = function (entityId, obj, cb) {
 
       }
 
+      entityId.pop()
+
       // Update the service entity with the new obj
-      this.service.update(entity, {}, function (err, updated) {
+      this.service.update.apply(this.service, entityId.concat([ entity, {}, function (err, updated) {
         if (err) return cb(err)
         var saved = extractFromArray.call(this, obj[this.options.idProperty], updated[this.name])
         cb(null, saved)
-      }.bind(this))
+      }.bind(this) ]))
 
     }.bind(this))
 
@@ -113,11 +117,13 @@ Subservice.prototype.delete = function (entityId, objId, cb) {
 
     entity[this.name].splice(deleteIndex, 1)
 
+    entityId.pop()
+
     // Update the service entity with the removed item
-    this.service.update(entity, {}, function (err) {
+    this.service.update.apply(this.service, entityId.concat([ entity, {}, function (err, updated) {
       if (err) return cb(err)
       cb(null, deleted)
-    })
+    }.bind(this) ]))
 
   }.bind(this)))
 

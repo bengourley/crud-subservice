@@ -22,10 +22,19 @@ describe('crud-subservice', function () {
 
   })
 
-  // Include tests for each method
-  require('./create.test')(service)
-  require('./read.test')(service)
-  require('./update.test')(service)
-  require('./delete.test')(service)
+
+  describe('attached to crud-service', function () {
+    require('./create.test')(service)
+    require('./read.test')(service)
+    require('./update.test')(service)
+    require('./delete.test')(service)
+  })
+
+  describe('attached to subservice', function () {
+    require('./create-nested.test')(service)
+    require('./read-nested.test')(service)
+    require('./update-nested.test')(service)
+    require('./delete-nested.test')(service)
+  })
 
 })

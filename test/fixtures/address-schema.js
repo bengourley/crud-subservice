@@ -39,6 +39,10 @@ function createSchema() {
       , validators: { all: [ validity.required ] }
       }
 
+    , phoneNumbers:
+      { type: Array
+      }
+
     })
 
 }
