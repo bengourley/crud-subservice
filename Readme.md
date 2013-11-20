@@ -57,5 +57,41 @@ id = `entityId`. Callback has the signature `function (err, updateObj) {}`.
 Delete a subservice entity with id = `objId` on the parent entity with
 id = `entityId`. Callback has the signature `function (err, deletedObj) {}`.
 
+
+## Nesting subservices within subservices (aka. subservice inception)
+
+It is possible to nest subservices within subservices (within subservices, within subservices etc.).
+
+The only thing that needs to be considered is that the lookup key for level of nesting, must be
+provided:
+
+```js
+{ _id: '123'
+, name: 'The Who'
+, members:
+  [ { _id: '234'
+    , name: 'Keith Moon'
+    , instruments:
+      [ { _id: '345'
+        , name: 'snare drum'
+        }
+      ]
+    }
+  ]
+}
+```
+
+In order to perform functions on the `band.member.instrument` subservice, you would have to pass the `_id`s
+for each object in the hierarchy as an array. In the docs above, any `String: entityId` argument (represents
+the parent entity) should be replaced with this array, e.g:
+
+```js
+instrumentService.read([ '123', '234' ], '345, function (err, obj) {
+  //-> got keith mooon's snare
+})
+```
+
+Note that the order of the array is left -> right / parent -> child.
+
 ## Licence
 Licensed under the [New BSD License](http://opensource.org/licenses/bsd-license.php)
