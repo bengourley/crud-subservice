@@ -58,11 +58,13 @@ Delete a subservice entity with id = `objId` on the parent entity with
 id = `entityId`. Callback has the signature `function (err, deletedObj) {}`.
 
 
-## Nesting subservices within subservices (aka. subservice inception)
+## Subservices within subservices
+
+(aka. subservice inception)
 
 It is possible to nest subservices within subservices (within subservices, within subservices etc.).
 
-The only thing that needs to be considered is that the lookup key for level of nesting, must be
+The only thing that needs to be considered is that the lookup key for level of nesting must be
 provided:
 
 ```js
@@ -86,7 +88,7 @@ for each object in the hierarchy as an array. In the docs above, any `String: en
 the parent entity) should be replaced with this array, e.g:
 
 ```js
-instrumentService.read([ '123', '234' ], '345, function (err, obj) {
+instrumentService.read([ '123', '234' ], '345', function (err, obj) {
   //-> got keith mooon's snare
 })
 ```
