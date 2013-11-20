@@ -31,10 +31,10 @@ describe('crud-subservice', function () {
   })
 
   describe('attached to subservice', function () {
-    require('./create-nested.test')(service)
-    require('./read-nested.test')(service)
-    require('./update-nested.test')(service)
-    require('./delete-nested.test')(service)
+    require('./nested/create.test')(service)
+    require('./nested/read.test')(service)
+    require('./nested/update.test')(service)
+    require('./nested/delete.test')(service)
   })
 
 })

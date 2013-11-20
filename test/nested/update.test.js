@@ -2,11 +2,11 @@ module.exports = test
 
 /* global describe, it */
 
-var Subservice = require('..')
+var Subservice = require('../..')
   , assert = require('assert')
   , uid = require('hat')
-  , addressSchema = require('./fixtures/address-schema')()
-  , phoneNumberSchema = require('./fixtures/phone-number-schema')()
+  , addressSchema = require('../fixtures/address-schema')()
+  , phoneNumberSchema = require('../fixtures/phone-number-schema')()
 
 function test(service) {
 
@@ -16,7 +16,7 @@ function test(service) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
         , phoneNumberService = new Subservice('phoneNumbers', addressService, phoneNumberSchema)
-        , address = require('./fixtures/address-valid-new')()
+        , address = require('../fixtures/address-valid-new')()
         , existing = { deliveryAddresses: [] }
 
       address._id = uid()
@@ -24,7 +24,7 @@ function test(service) {
 
       // Create some existing numbers
       for (var i = 0; i < 3; i++) {
-        var o = require('./fixtures/phone-number-valid-new')()
+        var o = require('../fixtures/phone-number-valid-new')()
         o._id = uid()
         existing.deliveryAddresses[0].phoneNumbers.push(o)
       }
@@ -32,7 +32,7 @@ function test(service) {
       // Save the entity with the existing addresses
       service.create(existing, function (err, savedObject) {
         if (err) return done(err)
-        var number = require('./fixtures/phone-number-valid-new')()
+        var number = require('../fixtures/phone-number-valid-new')()
 
         // Give the number to save one of the existing id/keys
         number._id = savedObject.deliveryAddresses[0].phoneNumbers[2]._id
@@ -62,11 +62,11 @@ function test(service) {
 
       service.create({}, function (err, savedObject) {
         if (err) return done(err)
-        addressService.create(savedObject._id, require('./fixtures/address-valid-new')(), function (err, savedAddress) {
+        addressService.create(savedObject._id, require('../fixtures/address-valid-new')(), function (err, savedAddress) {
           if (err) return done(err)
           assert(savedAddress)
           var ids = [ savedObject._id, savedAddress._id ]
-          phoneNumberService.update(ids, require('./fixtures/phone-number-valid-new')(), function (err, savedPhoneNumber) {
+          phoneNumberService.update(ids, require('../fixtures/phone-number-valid-new')(), function (err, savedPhoneNumber) {
             if (err) return done(err)
             assert(savedPhoneNumber)
             service.read(savedObject._id, function (err, obj) {
@@ -85,7 +85,7 @@ function test(service) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
         , phoneNumberService = new Subservice('phoneNumbers', addressService, phoneNumberSchema)
-        , address = require('./fixtures/address-valid-new')()
+        , address = require('../fixtures/address-valid-new')()
         , existing = { deliveryAddresses: [] }
 
       address._id = uid()
@@ -94,7 +94,7 @@ function test(service) {
       service.create(existing, function (err, savedObject) {
         if (err) return done(err)
         var ids = [ savedObject._id, address._id ]
-        phoneNumberService.update(ids, require('./fixtures/invalid-missing')(), function (err) {
+        phoneNumberService.update(ids, require('../fixtures/invalid-missing')(), function (err) {
           assert(err)
           assert(err instanceof Error)
           assert(Object.keys(err.errors).length > 1)
@@ -112,7 +112,7 @@ function test(service) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
         , phoneNumberService = new Subservice('phoneNumbers', addressService, phoneNumberSchema)
-      phoneNumberService.update([ 'abc', '123' ], require('./fixtures/address-valid-new')(), function (err) {
+      phoneNumberService.update([ 'abc', '123' ], require('../fixtures/address-valid-new')(), function (err) {
         assert(err)
         assert(err instanceof Error)
         done()

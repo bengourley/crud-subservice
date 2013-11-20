@@ -2,11 +2,11 @@ module.exports = test
 
 /* global describe, it */
 
-var Subservice = require('..')
+var Subservice = require('../..')
   , assert = require('assert')
   , uid = require('hat')
-  , addressSchema = require('./fixtures/address-schema')()
-  , phoneNumberSchema = require('./fixtures/phone-number-schema')()
+  , addressSchema = require('../fixtures/address-schema')()
+  , phoneNumberSchema = require('../fixtures/phone-number-schema')()
 
 function test(service) {
 
@@ -16,9 +16,9 @@ function test(service) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
         , phoneNumberService = new Subservice('phoneNumbers', addressService, phoneNumberSchema)
-        , address = require('./fixtures/address-valid-new')()
+        , address = require('../fixtures/address-valid-new')()
         , existing = { deliveryAddresses: [] }
-        , number = require('./fixtures/phone-number-valid-new')()
+        , number = require('../fixtures/phone-number-valid-new')()
 
       address._id = uid()
       existing.deliveryAddresses.push(address)
@@ -43,7 +43,7 @@ function test(service) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
         , phoneNumberService = new Subservice('phoneNumbers', addressService, phoneNumberSchema)
-        , address = require('./fixtures/address-valid-new')()
+        , address = require('../fixtures/address-valid-new')()
         , existing = { deliveryAddresses: [] }
 
       address._id = uid()
@@ -51,7 +51,7 @@ function test(service) {
 
       // Create some existing addresses
       for (var i = 0; i < 3; i++) {
-        var o = require('./fixtures/phone-number-valid-new')()
+        var o = require('../fixtures/phone-number-valid-new')()
         o._id = uid()
         existing.deliveryAddresses[0].phoneNumbers.push(o)
       }
@@ -85,7 +85,7 @@ function test(service) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
         , phoneNumberService = new Subservice('phoneNumbers', addressService, phoneNumberSchema)
-        , address = require('./fixtures/address-valid-new')()
+        , address = require('../fixtures/address-valid-new')()
         , existing = { deliveryAddresses: [] }
 
       address._id = uid()
