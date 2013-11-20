@@ -18,7 +18,9 @@ function Subservice(name, service, schema, options) {
  */
 Subservice.prototype.create = function (entityId, obj, cb) {
 
-  this.service.read(entityId, function (err, entity) {
+  if (!Array.isArray(entityId)) entityId = [ entityId ]
+
+  this.service.read.apply(this.service, entityId.concat(function (err, entity) {
 
     if (err) return cb(err)
     if (!entity) return cb(new Error('No entity found with id ' + entityId))
@@ -61,7 +63,6 @@ Subservice.prototype.create = function (entityId, obj, cb) {
 
       }
 
-
       // Update the service entity with the new obj
       this.service.update(entity, {}, function (err, updated) {
         if (err) return cb(err)
@@ -71,7 +72,8 @@ Subservice.prototype.create = function (entityId, obj, cb) {
 
     }.bind(this))
 
-  }.bind(this))
+  }.bind(this)))
+
 }
 
 /*
@@ -79,11 +81,13 @@ Subservice.prototype.create = function (entityId, obj, cb) {
  */
 Subservice.prototype.read = function (entityId, objId, cb) {
 
-  this.service.read(entityId, function (err, entity) {
+  if (!Array.isArray(entityId)) entityId = [ entityId ]
+
+  this.service.read.apply(this.service, entityId.concat(function (err, entity) {
     if (err) return cb(err)
     if (!entity) return cb(new Error('No entity found with id ' + entityId))
     cb(null, extractFromArray.call(this, objId, entity[this.name]))
-  }.bind(this))
+  }.bind(this)))
 
 }
 
@@ -92,7 +96,9 @@ Subservice.prototype.read = function (entityId, objId, cb) {
  */
 Subservice.prototype.delete = function (entityId, objId, cb) {
 
-  this.service.read(entityId, function (err, entity) {
+  if (!Array.isArray(entityId)) entityId = [ entityId ]
+
+  this.service.read.apply(this.service, entityId.concat(function (err, entity) {
 
     if (err) return cb(err)
     if (!entity) return cb(new Error('No entity found with id ' + entityId))
@@ -113,7 +119,7 @@ Subservice.prototype.delete = function (entityId, objId, cb) {
       cb(null, deleted)
     })
 
-  }.bind(this))
+  }.bind(this)))
 
 }
 
