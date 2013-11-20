@@ -16,12 +16,12 @@ function test(service) {
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
       service.create({}, function (err, savedObject) {
         if (err) return done(err)
-        addressService.create(savedObject._id, require('./fixtures/valid-new')(), function (err, savedAddress) {
+        addressService.create(savedObject._id, require('./fixtures/address-valid-new')(), function (err, savedAddress) {
           if (err) return done(err)
           assert(savedAddress)
           service.read(savedObject._id, function (err, obj) {
             if (err) return done(err)
-            assert.equal(Object.keys(obj.deliveryAddresses).length, 1)
+            assert.equal(obj.deliveryAddresses.length, 1)
             done()
           })
         })
@@ -32,7 +32,7 @@ function test(service) {
     it('should error if no entity exists for the given id', function (done) {
 
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
-      addressService.create('123', require('./fixtures/valid-new')(), function (err) {
+      addressService.create('123', require('./fixtures/address-valid-new')(), function (err) {
         assert(err)
         assert(err instanceof Error)
         done()
@@ -45,11 +45,11 @@ function test(service) {
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
         , existing = { deliveryAddresses: [] }
 
-      for (var i = 0; i < 3; i++) existing.deliveryAddresses.push(require('./fixtures/valid-new')())
+      for (var i = 0; i < 3; i++) existing.deliveryAddresses.push(require('./fixtures/address-valid-new')())
 
       service.create(existing, function (err, savedObject) {
         if (err) return done(err)
-        addressService.create(savedObject._id, require('./fixtures/valid-new')(), function (err, savedAddress) {
+        addressService.create(savedObject._id, require('./fixtures/address-valid-new')(), function (err, savedAddress) {
           if (err) return done(err)
           assert(savedAddress)
           service.read(savedObject._id, function (err, obj) {
@@ -69,7 +69,7 @@ function test(service) {
 
       // Create some existing addresses
       for (var i = 0; i < 3; i++) {
-        var o = require('./fixtures/valid-new')()
+        var o = require('./fixtures/address-valid-new')()
         o._id = uid()
         existing.deliveryAddresses.push(o)
       }
@@ -77,7 +77,7 @@ function test(service) {
       // Save the entity with the existing addresses
       service.create(existing, function (err, savedObject) {
         if (err) return done(err)
-        var address = require('./fixtures/valid-new')()
+        var address = require('./fixtures/address-valid-new')()
 
         // Give the address to save one of the existing id/keys
         address._id = savedObject.deliveryAddresses[2]._id
@@ -121,7 +121,7 @@ function test(service) {
 
     it('should call back with the saved address', function (done) {
       var addressService = new Subservice('deliveryAddresses', service, addressSchema)
-        , address = require('./fixtures/valid-new')()
+        , address = require('./fixtures/address-valid-new')()
       service.create({}, function (err, savedObject) {
         if (err) return done(err)
         addressService.create(savedObject._id, address, function (err, savedAddress) {
