@@ -68,7 +68,8 @@ Subservice.prototype.create = function (entityId, obj, options, cb) {
       entityId.pop()
 
       // Update the service entity with the new obj
-      this.service.update.apply(this.service, entityId.concat([ entity, {}, function (err, updated) {
+      var updateFn = this.service.partialUpdate || this.service.update
+      updateFn.apply(this.service, entityId.concat([ entity, {}, function (err, updated) {
         if (err) return cb(err)
         var saved = extractFromArray.call(this, obj[this.options.idProperty], updated[this.name])
         cb(null, saved)
@@ -120,7 +121,8 @@ Subservice.prototype.delete = function (entityId, objId, cb) {
     entityId.pop()
 
     // Update the service entity with the removed item
-    this.service.update.apply(this.service, entityId.concat([ entity, {}, function (err, updated) {
+    var updateFn = this.service.partialUpdate || this.service.update
+    updateFn.apply(this.service, entityId.concat([ entity, {}, function (err, updated) {
       if (err) return cb(err)
       cb(null, deleted)
     }.bind(this) ]))
