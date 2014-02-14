@@ -18,6 +18,8 @@ function Subservice(name, service, schema, options) {
  */
 Subservice.prototype.create = function (entityId, obj, options, cb) {
 
+  // This function doesn't have any options, but having options as an argument matches
+  // the signature of crud-service create/update, making nested services simpler
   if (typeof options === 'function') cb = options
 
   if (!Array.isArray(entityId)) entityId = [ entityId ]
@@ -68,8 +70,17 @@ Subservice.prototype.create = function (entityId, obj, options, cb) {
       entityId.pop()
 
       // Update the service entity with the new obj
-      var updateFn = this.service.partialUpdate || this.service.update
-      updateFn.apply(this.service, entityId.concat([ entity, {}, function (err, updated) {
+      var updateFn = this.service.update
+        , updateObj = entity
+
+      if (this.service.partialUpdate) {
+        updateFn = this.service.partialUpdate
+        updateObj = {}
+        updateObj[this.options.idProperty] = entity[this.options.idProperty]
+        updateObj[this.name] = entity[this.name]
+      }
+
+      updateFn.apply(this.service, entityId.concat([ updateObj, {}, function (err, updated) {
         if (err) return cb(err)
         var saved = extractFromArray.call(this, obj[this.options.idProperty], updated[this.name])
         cb(null, saved)
@@ -120,9 +131,19 @@ Subservice.prototype.delete = function (entityId, objId, cb) {
 
     entityId.pop()
 
+    // Update the service entity with the new obj
+    var updateFn = this.service.update
+      , updateObj = entity
+
+    if (this.service.partialUpdate) {
+      updateFn = this.service.partialUpdate
+      updateObj = {}
+      updateObj[this.options.idProperty] = entity[this.options.idProperty]
+      updateObj[this.name] = entity[this.name]
+    }
+
     // Update the service entity with the removed item
-    var updateFn = this.service.partialUpdate || this.service.update
-    updateFn.apply(this.service, entityId.concat([ entity, {}, function (err, updated) {
+    updateFn.apply(this.service, entityId.concat([ updateObj, {}, function (err, updated) {
       if (err) return cb(err)
       cb(null, deleted)
     }.bind(this) ]))
