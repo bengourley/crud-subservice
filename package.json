@@ -1,6 +1,6 @@
 {
   "name": "crud-subservice",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Nest crud-services within crud-services",
   "main": "subservice.js",
   "publishConfig": {
